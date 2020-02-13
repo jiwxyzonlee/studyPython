@@ -1,0 +1,375 @@
+
+
+** 파이썬 콘솔 입력
+
+input('메시지')를 호출하면 한 줄의 텍스트를 입력받고 리턴해주는 함수
+
+name = input("이름을 입력하세요")
+
+
+
+** 문자열 데이터를 숫자로 변경하기
+
+int('정수 문자열')
+: 정수로 변환돼서 리턴
+
+float('실수 문자열')
+: 실수로 변환돼서 리턴
+
+- 하나의 정수를 입력받기
+
+n = int(input('정수를 입력하세요 : ')
+->> 좋은 방법이 아님
+->> 메소드 안에서 메소드를 부르는 방법은 메모리를 많이 쓰게 됨(재귀)
+
+s = input('정수를 입력하세요 : ')
+n = int(s)
+->> 나눠서 처리하는 게 좋음
+
+
+** 파이썬의 제어문
+- 제어문은 하나의 블록
+
+코드:
+	내부코드
+	내부코드
+
+블록과 상관 없는 코드
+
+
+1. 분기문(갈림길)
+
+if 표현식:
+	표현식의 내용이 True일 때 수행할 내용
+elif 표현식:
+	앞의 표현식이 False이고 자신의 표현식이 True일 때 수행할 내용
+elif 표현식  #중복작성 가능
+
+...
+
+else:
+	앞의 모든 표현식이 거짓일 때 수행할 내용
+
+->> 표현식은 데이터가 만들어지면 전부 표현식
+- True, False가 아니더라도 Python 에서는 bool로 간주하는 경우가 있는데 숫자 데이터는 0이 아니면 True, 0일 시 False로 간주
+- 숫자 이외의 데이터는 데이터가 존재하면 True, 데이터가 없으면 False 
+
+변수 = None # <- 데이터가 없는 것
+# 없는 변수 이름을 사용하면 에러 -> Undefined
+
+- elif와 else는 상황에 따라 생략 가능
+- elif는 중복이 가능하지만 else는 한 번만 나와야 함
+
+
+1. 문자열 1개 입력받아 '남자' 입력 시 man 출력, '여자' 입력 시 woman 출력, 그 이외의 경우는 잘못된 입력이라고 출력
+
+# py0213.py
+gender = input('성별을 입력하세요(남자/여자) : ')
+
+if gender == '남자':
+    print('man')
+    # 앞 표현식이 false여야 하면 elif, 앞 표현식과 상관 없을 시 if 사용
+elif gender == '여자':
+    print('woman')
+else:
+    print('잘못된 입력')
+
+- 연습: 정수 1개를 입력받아서 3000 이상이면 대형차, 2000-2999이면 중형차, 1000-1999는 소형차, 나머지 경우는 이상한 배기량이라고 출력
+
+<<(내 풀이1)
+cc = input("배기량을 입력하세요 : ")
+car = int(cc)
+
+if car >= 3000:
+    print('대형차')
+elif 2000 <= car < 3000:
+    print('중형차')
+elif 1000<= car < 2000:
+    print('소형차')
+else:
+    print('이상한 배기량')
+
+<<(내 풀이2)
+cc = input("배기량을 입력하세요 : ")
+car = int(cc)
+
+if car >= 3000:
+    print('대형차')
+elif 2000 <= car:
+    print('중형차')
+elif 1000 <= car:
+    print('소형차')
+else:
+    print('이상한 배기량')
+
+
+2. while 
+- 반복문 (Loop, Iterator)
+
+while 표현식:
+	표현식이 False가 아니라면 수행할 내용
+->> while은 대부분 몇 개인지 알 수 없을 때 사용하는 반복문 (데이터의 개수를 모를 때 씀)
+->> 실제 while을 사용하는 대부분의 경우는 
+while True:
+	if 표현식:
+		break
+	반복 수행할 내용
+
+
+3. for
+: 반복문 (Loop, Iterator)
+- 반복할 횟수를 알거나 데이터의 모임을 순회할 때 사용
+
+for 임시변수 in 데이터의 모임:
+	반복할 내용
+->> 데이터의 모임에서 순서대로 하나씩 꺼내서 임시변수에 대입하고 내용을 반복
+
+- * 데이터의 모임인지 확인하는 방법
+: dir을 이용하여 데이터의 사용가능한 속성 중 '__iter__' 가 있을 시 해당 데이터는 순회가능한 데이터의 모임임 
+
+- 책에서 나오는 방법
+li = [100, 200, 300]
+
+for imsi in li:
+	print(imsi)
+
+
+# py0213.py
+
+li = [100, 200, 300]
+print(dir(li))
+
+--shell--
+['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__'
+, '__iter__'
+, '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+
+'__iter__' 확인
+
+for imsi in li:
+    print(imsi)
+
+->> 출력
+100
+200
+300
+
+
+4. range
+
+range(시작값, 종료 다음값, 간격)
+: 시작값부터 간격 단위로 종료값까지 순회하는 순서열 생성
+
+->> for와 함께 자주 사용
+
+#for와 함께 쓸 수 있던 이유
+print(dir(range(0, 10, 1))) # '__iter__' 찾기
+
+--shell--
+['__bool__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__init_subclass__', 
+'__iter__',
+ '__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'count', 'index', 'start', 'step', 'stop']
+
+range(종료다음값)
+: 시작값은 0으로 간격은 1로 설정해줌
+
+- 연습문제 1) while을 이용해서 아래와 같은 문장을 출력
+
+article1
+article2
+article3
+
+i = 1
+while i <= 3:
+	print('article', i)
+	i = i + 1
+
+
+- 연습문제 2) for를 이용해서 아래와 같은 문장을 출력
+
+num = 1
+num = 16
+num = 31
+num = 46
+
+for i in range(1, 5, 1):  #range(0, 4, 1) 도 가능
+	print('num=', 1 + 15 * (i-1))
+	# range(0, 4, 1)의 경우 print('num=', 1 + 15 * i)
+
+->> 위와 같은 형태를 출력해보는 이유는 웹에서 데이터를 수집할 때 많은 양의 데이터는 대부분 페이징 처리가 되어 있기 때문에 페이지에 해당하는 URL패턴을 찾아서 프로그램에 넣어줘야 함
+
+
+5. 제어문의 중첩
+- 제어문 안에 제어문 사용 가능
+
+
+6. break 와 continue
+
+1) break
+: 가장 가까운 반복문을 종료하는 제어문
+
+2) continue
+: 가장 가까운 반복문의 다음 수행으로 이동하는 제어문
+
+->> 반복문 안에서 if와 함께 사용
+->> 파이썬에서 if 없이 절대로 사용하지 않음
+
+for i in range(1, 4, 1):
+	if i % 2 ==0:
+		break
+	print(i)
+->> 짝수가 되면 반복문을 중단하는 것이므로 1만 출력
+
+for i in range(1, 4, 1):
+	if i % 2 ==0:
+		continue
+	print(i)
+->> 짝수가 되면 다음 반복으로 넘어가라는 것이므로 1과 3 출력
+
+- 데이터 수집처럼 특정 조건을 만날 때까지만 수집
+->> 회사이름으로 올라온 신문기사 스크랩 & 오늘 날짜만 해당하는 기사만 스크랩
+->> 조건을 만들어서 break 사용 필요
+
+->> 댓글 수집의 경우, 하나의 아이디 + 여러 개의 댓글
+->> 첫 번째 데이터만 읽고 나머지는 pass (-> continue 사용)
+
+
+7. for - break - else
+
+for 표현식:
+	if 표현식:
+		break
+else:
+	수행할 내용
+->> 이 식에서 else는 for가 break에 걸리지 않고 전부 수행한 후 종료되었을 때 수행할 내용
+
+for i in range(1, 4, 1):
+	if i % 2 ==0:
+		print(i)
+		break
+else:
+	print('반복문을 전부 수행')
+->> 이 경우 2에서 break를 만나 반복문이 종료되었으므로 else내용을 수행하지 않음
+
+for i in range(1, 4, 1):
+	if i % 4 ==0:
+		break
+else:
+	print('반복문을 전부 수행')
+->> 이 경우는 else 내용 수행
+->> break를 만나지 않고 반복문이 수행&종료되였으므로
+
+->> 연차나 월차 계산할 때 사용 가능
+->> 6일 매일 출근했으면 월차/연차 사용가능
+->> 6일 중 한 번이라도 쉬었으면 월차/연차 사용 불가능
+
+->> 게임에서 출석 이벤트 사용 가능
+->> 일주일 연속 나오면 선물 이벤트
+->> 하루라도 빠지면 다시 처음부터 혹은 꽝
+
+
+**Function (함수)
+- 자주 사용하는 코드를 독립적인 모듈로 만들어 둔 것 (독립적으로 묶어둔 것)
+- 별도의 메모리 영역을 할당받아 코드를 실행
+
+1. 종류
+
+1) Maker Function
+: 처음부터 제공되는 함수
+
+2) User Define Function
+: 사용자가 만든 함수
+
+3) 3rd Party Function
+: 제조사가 제공하지도 않았고 내가 만들지도 않은 함수
+- 패키지를 다운받아 설치해야만 사용 가능
+
+
+2. Python에서 함수를 표현
+
+이름(매개변수) -> 리턴타입
+
+이름(매개변수) # : 이 함수가 데이터를 리턴하지 않는 경우
+->> 그러나 아래 설명문에서 리턴을 한다고 작성하는 경우도 있음
+
+
+3. 용어
+- 매개변수는 함수를 호출할 때 넘겨주어야 하는 데이터
+- 리턴은 함수를 수행하고 난 후 남겨주는 데이터
+->> 리턴이 있으면 출력할 수 있고 변수에 저장해서 재사용할 수도 있음
+->> 리턴이 없으면 출력도 못하고 변수에 저장할 수 없음
+
+
+4. 함수의 사용법 확인
+
+help(함수명)
+
+
+help(max)
+
+Help on built-in function max in module builtins:
+
+max(...)
+    max(iterable, *[, default=obj, key=func]) -> value
+    max(arg1, arg2, *args, *[, key=func]) -> value
+    
+    With a single iterable argument, return its biggest item. The
+    default keyword-only argument specifies an object to return if
+    the provided iterable is empty.
+    With two or more arguments, return the largest argument.
+
+
+help(list.sort)
+
+Help on method_descriptor:
+
+sort(self, /, *, key=None, reverse=False)
+    Sort the list in ascending order and return None.
+    
+    The sort is in-place (i.e. the list itself is modified) and stable (i.e. the
+    order of two equal elements is maintained).
+    
+    If a key function is given, apply it once to each list item and sort them,
+    ascending or descending, according to their function values.
+    
+    The reverse flag can be set to sort in descending order.
+
+->> 리턴 값이 없으면 리턴을 받아야 함 (데이터를 줘야 하고 데이터가 변경되어서 온다)
+
+- 리턴이 없는 함수는 내 데이터를 받아서 데이터에 작업 수행
+
+# py0213.py
+
+li = [100, 300, 200]
+
+#print(li.sort()) # 잘못된 문장 - sort는 리턴을 하지 않아 None 출력
+
+li.sort()
+
+print(li) # 데이터에 작업한 것을 알 수 있음 [100, 200, 300]
+
+
+5. Python에서는 함수가 일급 객체
+- 파이썬에서는 함수도 하나의 데이터
+
+함수()
+: 함수를 호출해서 실행
+
+함수
+: 함수 호출이 아닌 함수가 저장된 곳의 참조를 불러옴
+
+print(li.sort)
+<built-in method sort of list object at 0x000001E1F8E1D440>
+->> 내(파이썬)가 너한테 만들어준(built-in) 함수의 주소(0x000001E1F8E1D440)
+
+print(list.sort)
+<method 'sort' of 'list' objects>
+
+
+6. Built-in 빌트인 함수 확인
+
+dir(__builtins__)
+
+파이썬에서 '__글자__' 는 예약어임 (변수 이름으로 쓰지 않는 것을 권장)
+
+
