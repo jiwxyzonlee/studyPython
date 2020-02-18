@@ -1,0 +1,340 @@
+
+
+** 함수
+
+
+1. 매개변수가 있는 함수
+- 매개변수가 있는 경우 매개변수의 이름만 나열하면 됨
+
+- 매개변수가 있는 함수를 호출할 때는 기본적으로 매개변수를 전부 대입해서 호출해야 함
+
+- 매개변수는 순서대로 대입해야 하며 매개변수 이름과 함께 대입할 시 순서를 변경하여 대입도 가능
+->> 대다수의 경우 첫번째 매개변수는 핵심이 될 매개변수일 가능성이 높기 때문에 이름없이 대입하며 두번째 매개변수부터 이름과 함께 대입됨
+
+#py0218.py
+
+# data를 cnt만큼 출력하는 함수
+def disp(data, cnt):
+    for i in range(0, cnt, 1):
+        print(data)
+
+# 함수 호출
+
+disp('python', 3)
+
+->> 출력
+python
+python
+python
+
+1) 매개변수를 적게 대입해서 발생하는 예외
+
+#py0218.py
+# 매개변수 개수가 부족해서 예외
+disp('python')
+#TypeError: disp() missing 1 required positional argument: 'cnt'
+
+2) 매개변수를 잘못 대입해서 발생하는 예외
+
+#py0218.py
+# 자료형 예외
+disp(3, 'python')
+# TypeError: 'str' object cannot be interpreted as an integer
+
+'''
+numpy의 array -> 머신러닝
+
+pandas의 DataFrame -> 통계나 시각화
+'''
+
+# 매개변수의 순서를 변경해서 대입
+disp(cnt = 3, data = 'Java') #가능
+
+->> 출력
+python
+python
+python
+
+Java
+Java
+Java
+
+- 매개변수에 기본 값 부여 가능
+->> 매개변수 만들 때 ' = 기본값' 을 설정해주면 됨
+->> 기본값이 있는 매개변수는 생략하고 호출 가능
+
+- 매개변수 앞에 *을 붙이면 데이터를 몇 개를 대입하든지 이 매개변수가 전부 받음
+->> 함수 내에서는 tuple로 취급함
+->> 이 매개변수는 반드시 마지막에 설정되어야 함
+
+- 매개변수 앞에 **을 붙이면 dict가 됨
+->> 데이터 대입시 key=value 형식으로 대입해야 함
+->> **이 붙는 매개변수를 가진 함수를 사용할 때는 document를 잘 읽어보아야 함
+->> 특히 그래프를 그리는 함수들이 이러한 형태의 매개변수를 가지고 있는 경우가 많음
+->> 적절한 옵션을 찾아 사용해야 함
+
+#py0218.py
+# cnt의 기본값이 1로 설정된 함수
+# cnt를 생략하면 1
+def display(data, cnt = 1):
+    for i in range(0, cnt, 1):
+        print(data)
+        
+display('C++')
+
+->> 출력
+C++
+
+#py0218.py
+# sum 함수의 도큐먼트 확인
+help(sum)
+
+>>>
+Help on built-in function sum in module builtins:
+
+sum(iterable, /, start=0)
+    Return the sum of a 'start' value (default: 0) plus an iterable of numbers
+    
+    When the iterable is empty, return the start value.
+    This function is intended specifically for use with numeric values and may
+    reject non-numeric types.
+
+#py0218.py
+# max 함수의 도큐먼트 확인
+help(max)
+
+>>>
+Help on built-in function max in module builtins:
+
+max(...)
+    max(iterable, *[, default=obj, key=func]) -> value
+    max(arg1, arg2, *args, *[, key=func]) -> value
+    
+    With a single iterable argument, return its biggest item. The
+    default keyword-only argument specifies an object to return if
+    the provided iterable is empty.
+    With two or more arguments, return the largest argument.
+
+#py0218.py
+# max의 세번째  매개변수에는 *이 붙어서 몇 개를 대입해도 됨
+print(max(20, 10, 50, 40))
+print(max(20, 10, 40, 50, 80, 87))
+
+#py0218.py
+# **이 붙은 매개변수에는 key=value 형태로 여러 개 대입 가능
+def createurl(server, port, file, **param):
+    querystring = ''
+    for key in param:
+        querystring =querystring + key + '=' + param[key] + '&'
+    url = server + ' : ' + port + '/' + file + '? ' + querystring
+    print(url)
+
+createurl('211.183.6.60', '9000', 'index.html', name='google', pw='naver')
+#211.183.6.60 : 9000/index.html? name=google&pw=naver&
+
+
+2. return
+- 함수의 수행을 종료하고 호출한 곳으로 돌아가는 명령어
+- return 할 때 데이터를 같이 가지고 갈 수 있음
+->> return 뒤에 가지고 갈 데이터를 입력하면 데이터를 가지고 돌아감
+->> 기본적으로 return은 1개만 가능
+->> 2개 이상 리턴하고자 하는 경우네는 (튜플), [리스트], {set이나 dict} 형태로 묶거나 나중에 나오는 class의 instance를 만들어서 리턴해야 함
+
+- 파이썬은 튜플의 경우 변수에 나누어서 저장 가능
+변수나열 = (튜플)
+->> 튜플의 데이터를 순서대로 변수에 대입
+->> 변수의 개수와 튜플의 데이터 개수가 다른 경우에는 마지막 변수에 튜플의 모든 데이터를 대입함
+
+- 리스트 등은 못 쪼개므로 주로 쪼갤 수 있는 tuple이나 dict로 결과를 제공하나 tuple이 더 좋음
+
+# py0218.py
+def reg(data):
+    slope = 3
+    intercept = 7
+    return (slope, intercept)
+
+r = reg(10)
+# 튜플 한꺼번에 저장
+print(r)
+print(type(r))
+
+# 튜플 나눠서 저장
+slope, intercept = reg(10)
+print('slope: ', slope)
+print('intercept: ', slope) 
+
+->> 출력
+(3, 7)
+<class 'tuple'>   # 쪼갤 수 있다!
+slope:  3
+intercept:  3
+
+
+3. 재귀함수 (recursion)
+: 함수가 자기 자신을 다시 호출하는 것
+- 함수가 함수를 호출하는 구조라서 느리고 메모리 사용량도 많으나 코드를 간결하게 만들 수 있음 *중요*
+
+* 머신러닝 혹은 딥러닝에서 자원은 생각만큼 중요한 게 아니다
+* 알파고의 바둑: 모든 경우의 수를 쫓아서 승률이 가장 높은 경우의 수를 찾아내는 것 -> 재귀함수
+->> 알고리즘이 쉬워야 쓰는 사람도 읽는 사람한테도 쉽다
+->> 실제 업무에서는 엄청 많은 자원량
+->> 시간제한을 30초로 뒀으면 이세돌이 이길 수 있었다
+
+* 피보나치 수열
+1, 1, 2, 3, 5, 8, 13, ...
+첫번째와 두번째는 무조건 1
+세번째와 앞 2개의 합
+
+# py0218.py
+def fibonacci(n):
+    if n == 1 or n == 2 : #끝날 때의 조건
+        return 1
+    else :
+        return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(10)) #55
+
+* 삼성전자의 코딩테스트 두번째 문제는 무조건 재귀함수임
+* 하노이의 탑 꼭 연습해보기 <- 감독관 배정과 유사
+
+
+4. 파이썬에서 함수는 일급 객체
+: 함수를 변수에 저장할 수 있고 리턴할 수 있으며 매개변수로 대입할 수도 있다
+- JavaScript도!
+- Java만 제외
+
+- 함수형 프로그래밍을 사용할 때와 closure를 만들기 위해서 사용함
+- 함수형 프로그래밍은 데이터의 모임(list, tuple, set, dict 등)에 하나의 함수를 전부 다 적용하는 프로그래밍
+- closure는 함수가 함수를 리턴해서 함수 내부의 데이터를 함수 외부에서 변경하도록 하는 프로그래밍
+
+
+5. 람다(lambda)
+- 파이썬에서는 이름 없는 한 줄짜리 함수
+lambda 매개변수 나열 : 리턴할 내용
+
+# py0218.py
+
+def addint(x,y) :
+    return x + y
+
+# 람다식으로 바꾸기
+
+lambdaadd = lambda x, y : x + y
+print(lambdaadd(100, 200))
+
+- 매개변수의 초기화도 가능
+- 그러나 한 줄짜리 함수여서 변수 선언은 안 됨
+
+
+6. 함수적 프로그래밍
+: 데이터의 모임에 함수를 전부 적용하는 프로그래밍
+
+1) map
+: 데이터의 모임과 함수를 매개변수로 받아 데이터의 모임에 함수를 전부 적용하고 그 결과를 데이터의 모임으로 리턴
+- 대입되는 함수는 1개의 매개변수를 가져야 하며 반드시 데이터를 리턴해야 함
+
+# 1000의 데이터에 1씩 더한 결과로 list 만들기
+
+# 반복문을 이용한 방법
+
+def inc(x):
+    return x + 1
+
+collection = [i for i in range(0, 10000, 1)]
+
+import datetime
+
+start = datetime.datetime.now()
+print(start)
+
+result = []
+for i in collection:
+    #result.append(i + 1)
+    result.append(inc(i))
+
+end = datetime.datetime.now()
+print(end)
+
+print(end-start)
+
+#2020-02-18 19:19:30.670362
+#2020-02-18 19:19:30.697243
+#0:00:00.026881
+
+collection = [i for i in range(0, 10000, 1)]
+
+start = datetime.datetime.now()
+print(start)
+
+result = []
+for i in collection:
+    #result.append(i + 1)
+    result.append(inc(i))
+
+print(datetime.datetime.now())
+print()
+
+#함수형 프로그래밍을 이용한 방법
+result = list(map(inc, collection))
+print(datetime.datetime.now())
+print(datetime.datetime.now())
+
+2) filter
+: 데이터의 모임에서 함수의 수행결과가 true인 데이터만 모아서 리턴해주는 함수
+- 대입되는 함수는 매개변수를 1개 받아서 bool을 리턴하는 함수여야 함
+
+# 무조건 이러한 형태
+def odd(x):
+    return bool
+
+# py0218.py
+
+def odd(x):
+    return x % 2 == 1
+
+li = [10, 30, 21, 32, 29]
+
+print(filter(odd, li)) #<filter object at 0x000002191E7C7940>
+print(list(filter(odd, li))) #[21, 29]
+
+3) reduce
+: 데이터의 모임과 함수를 가지고 누적 연산을 수행해서 결과를 리턴하는 함수
+- 결과가 1개
+- 대입되는 함수는 매개변수가 2개이고 결과를 리턴하는 함수이어야 함
+->> 매개변수는 처음에는 첫번째와 두번째를 가지고 수행을 하고 그 다음부터는 앞 연산의 결과를 가지고 다음 데이터와 연산을 함
+
+- python3에서는 reduce가 내장함수에서 빠지고 functools 패키지의 함수로 변경
+
+# py0218.py
+
+def odd(x):
+    return x % 2 == 1
+
+li = [10, 30, 21, 32, 29]
+
+print(filter(odd, li)) #<filter object at 0x000002191E7C7940>
+print(list(filter(odd, li))) #[21, 29]
+
+
+def addint(x, y):
+    return x + y
+
+#print(reduce(addint, li)) #NameError: name 'reduce' is not defined
+
+# reduce는 누적 연산을 해서 결과를 리턴하는 함수
+
+import functools
+print(functools.reduce(addint, li)) #122
+
+
+* map-reduce에서 가장 먼저하는 게 count
+
+
+7. pass
+: 클래스나 함수의 내용을 나중에 작성하고자 할 때 사용하는 예약어
+- 내용이 없는 함수나 클래스를 만들 때 사용함
+
+
+8. __doc__
+: 함수 내부에 __doc__ 속성에 문자열을 대입할 시 help(함수)를 썼을 때 출력이 됨
+- Python이나 R에서는 함수를 만들어서 배포하고자 할 때 이 속성에서 해당 함수의 기능을 설명해야 함
