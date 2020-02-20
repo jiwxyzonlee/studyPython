@@ -1,0 +1,264 @@
+
+변수 < 함수 < 클래스 < 파일(모듈) < 패키지
+
+함수부터를 모듈 프로그래밍이라고 함
+
+
+
+** 클래스
+
+
+1. 용어
+
+1) class
+: 동일한 목적을 달성하기 위해 모인 변수와 함수의 집합
+
+사용자 정의 자료형
+: 사용자가 만드는 자료형
+
+2) object
+: 프로그래밍에서 사용되는 모든 것
+
+3) class object
+: 클래스와 동일한 의미
+
+4) instance
+: class를 기반으로 만들어진 객체
+
+
+2. 파이썬에서 클래스 정의
+
+class 클래스이름:
+	코드 작성
+
+
+3. method 생성
+- method
+: class 안에 만들어진 함수
+
+1) member method
+: 만들기는 클래스에 만들지만 실제 사용은 instance가 하는 메소드
+- Python에서는 member method를 만들 때 매개변수가 반드시 1개 이상 있어야 함
+->> 이 매개변수는 instance 자신의 참조가 대입됨
+->> 이름은 관습적으로 self라고 함
+->> 도움말을 확인할 때 첫번째 매개변수로 self가 있으면 이 메소드는 무조건 member method
+
+def 메소드이름(self[, 다른 매개변수를 선언]):
+	메소드 수행 내용
+
+2) member method 호출
+- 자신의 클래스 내부에서 호출
+self.메소드이름(매개변수)  #self에는 아무것도 대입하지 않음
+
+- 클래스 외부에서 호출 (바운드 호출)
+인스턴스이름.메소드이름(매개변수) #self에는 아무것도 대입하지 않음
+
+- 클래스 외부에서 호출 (언바운드 호출)
+클래스이름.메소드이름(인스턴스, 매개변수) #self에 인스턴스를 대입함
+
+3) 클래스의 인스턴스
+생성자(매개변수)
+
+# py0220.py
+
+# 클래스 생성
+class Student:
+    # member 메소드
+    def func(self):
+        print('member method')
+
+obj = Student()
+obj.func()  # 인스턴스가 메소드를 호출 - 권장
+Student.func(obj) # 클래스가 메소드를 호출
+
+4. 속성(field, attribute..)
+- 객체 안에 데이터를 저장할 수 있는 변수
+- 클래스 안에서 메소드 외부에 변수가 선언되면 클래스가 사용할 수 있고 인스턴스는 읽을 수만 있음
+- 인스턴스가 메소드 외부에 선언된 변수를 수정하게 되면 인스턴스 안에 변수를 만들어서 저장을 함
+
+- 메소드 안에서 만들어진 변수는 메소드 안에서만 사용이 가능한 지역변수가 됨
+- 메소드 안에서 변수를 만들 때 self.변수명 을 사용하면 instance가 별도로 소유하는 인스턴스 변수가 됨
+- 파이썬의 인스턴스는 속성을 마음대로 추가할 수 있음
+인스턴스이름.속성명 = 데이터
+->> 이 속성이 존재하면 수정되고 없으면 추가됨
+
+# py0220.py
+class Student:
+    # 이 변수는 클래스와 인스턴스 모두 접근 가능하지만
+    # 인스턴스는 수정 불가
+    schoolName = 'choongang'
+
+    def method(self):
+        self.num = 1 # 인스턴스가 사용할 수 있는 변수 생성
+        age = 20 # 메소드 안에서만 사용할 수 있는 변수 생성
+
+# 메소드 바깥에 있는 변수는 클래스와 인스턴스 모두 호출 가능
+print(Student.schoolName) #choongang
+obj = Student()
+print(obj.schoolName) #choongang
+
+# 클래스가 수정
+Student.schoolName = 'megaStudy'
+print('클래스로 수정한 후 출력')
+print(Student.schoolName) #megaStudy
+print(obj.schoolName) #megaStudy
+
+obj.schoolName = '서울대학교'
+print('인스턴스로 수정한 후 출력')
+print(Student.schoolName) #megaStudy
+print(obj.schoolName) #서울대학교
+
+# 파이썬은 클래스에 없는 속성을 인스턴스에 추가 가능
+obj.name = 'Park'
+print(obj.name) #Park
+
+# method에서 self.num과 age를 생성
+obj.method()
+print(obj.num) # 인스턴스 호출가능
+print(obj.age) # age는 지역변수라서 인스턴스가 호출 불가능
+#'Student' object has no attribute 'age'
+
+
+5. 특수 속성
+- 파이썬이 용도를 정의해놓은 속성
+- __로 시작하고 __로 끝남
+->> 대표적인 속성이 __doc__로 함수에서 이 속성에 문자열을 대입하면 help로 확인이 가능함
+
+
+6. Constructor(생성자)
+- Python에서는 __init__ 라는 이름으로 생성자를 만듦
+- 첫번째 매개변수는 self, 이후 매개변수 추가 가능
+->> 만들지 않아도 self만 가진 생성자가 클래스에 자동으로 추가됨
+__init__(self) #존재
+
+- 새로 생성자를 추가하면 기본적으로 제공되는 생성자는 소멸됨
+
+- 생성자를 만드는 이유는 다른 메소드를 호출하지 않고 인스턴스 속성을 초기화하기 위해서임
+- 생성자를 호출하는 방법은 클래스이름(매개변수) 형태로 하고 호출하면 메모리 할당을 한 후 그 메모리에 대한 참조를 리턴함
+
+# py0220.py
+class Student:
+    
+    # 생성자
+    # (매개변수 없이 호출하면 name=None)
+    # (매개변수를 대입하면 그 값이 name에 대입)
+    def __init__(self, name = None):
+        self.name = name
+        
+    def getName(self):
+        return self.name
+    
+    def setName(self, name):
+        self.name = name # 이 때 name이 만들어짐
+
+obj = Student()
+# 생성자가 없어도 setName을 호출하면 self.name이 만들어지기 때문에 문제가 안됨
+obj.setName('park')
+print(obj.getName())
+
+obj1 = Student()
+print(obj1.getName()) #생성자(__init__)가 없으면 setName을 호출하지 않았기 때문에 name이 없음
+#'Student' object has no attribute 'name'
+# 생성자(__init__)가 있어도 매개변수 없이 호출해서 None
+
+obj2 = Student('Steve')
+print(obj2.getName())
+
+
+7. __del__
+: 인스턴스가 파괴될 때 호출되는 메소드
+- self 이외의 매개변수는 가질 수 없음
+- Python의 메모리 관리는 Reference Count(참조 횟수) 방식
+- 참조횟수가 0이 되면 파괴됨
+- 인스턴스가 변수에 대입되면 참조 횟수는 1 증가
+->> del(변수명) 을 호출하거나 None을 대입하면 참조횟수가 1 감소
+
+- 참조횟수를 확인하고자 하는 경우는 sys 모듈의 getrefcount 라는 함수에 인스턴스를 대입하면 됨
+
+# py0220.py
+
+8. 정적 메소드
+: 클래스가 호출하는 메소드
+
+1) static 메소드
+
+- 메소드 위에 @staticmethod 라고 기재하고 매개변수를 만들 때 self를 만들지 않음
+
+2) class 메소드
+- 메소드 위에 @classmethod라고 기재하고 첫번째 매개변수는 클래스 자신이 대입되는 cls 추가
+
+
+9. __slots__ 속성
+- 이 속성에 list로 문자열을 대입하면 문자열에 해당하는 속성만 사용 가능
+
+
+10. property
+- 객체 지향 프로그래밍에서는 인스턴스가 변수를 직접 사용하는 것을 권장하지 않음
+->> getter와 setter를 이용해서 접근하는 것을 권장
+- 파이썬에서는 인스턴스 변수를 만들 때 __를 앞에 붙이면 인스턴스가 변수에 접근 못함
+- property(fget=None, fset=None, fdel=None, doc=None) 함수를 이용하여 getter와 setter 메소드 지정 가능
+->> 변수를 사용하는 것처럼 사용하지만 실제로는 property에 설정된 메소드를 호출함
+
+class DTO:
+    def __init__(self, name=None):
+        #private처럼 클래스 외부에서는 __name에 접근할 수 없음
+        self.__name = name
+
+    def getName(self):
+        print('getter')
+        return self.__name
+    def setName(self, name):
+        print('setter')
+        self.__name = name
+    #.name을 호출하면 getName이 호출, .name=값을 호출하면 setName이 호출
+    name = property(fget=getName, fset=setName)
+
+        
+dto = DTO('park')
+#print(dto.__name) #'DTO' object has no attribute '__name'
+dto.name = 'kim'
+print(dto.name)
+
+
+11. 연산자 오버로딩
+- 연산자의 기능을 변경하는 것
+- __add__(self, other)
+->> 해당 메소드를 생성 시 이 클래스의 인스턴스들은 '+' 연산 가능
+- 그 이외에도 sub(-), mul(*) 을 재정의하면 다른 연산자도 사용 가능
+- dir(인스턴스 혹은 클래스)로 사용할 수 있는 메소드 확인하여 어떤 연산이 가능한지 알아봐야 함
+
+li1 = [100, 300]
+print(dir(li1))
+
+['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+
+
+
+li1 = [100, 300]
+print(dir(li1))
+
+li2 = [30, 70]
+print(li1 + li2)  # __add__가 존재하므로 더하기 가 가능
+print(li1 > li2) # __gt__ (greater than) 이 존재하므로 비교가 가능
+# sub는 없어서 빼기는 불가능
+
+
+12. 상속
+class 클래스이름(클래스 이름 나열):
+->> 파이썬은 다중 상속 가능, 여러 개의 클래스로부터 상속 가능
+->> 파이썬은 여러 클래스에 동일한 이름의 속성이나 메소드가 있으면 앞에 작성한 클래스의 것을 상속 받음
+
+
+
+** 파이썬과 R 의 차이
+
+R
+: 분석만 가능
+- 최근에는 프로그램 만드는 것도 가능하지만 불편
+
+Python
+: 범용 프로그래밍 언어
+- 분석을 쉽게 할 수 있는 라이브러리가 제공, 분석도 가능
+
+->> 단순하게 분석을 해서 보기만 할 거라면 R
+->> 결과물 생성이 목적이라면 Python
