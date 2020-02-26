@@ -1,0 +1,77 @@
+**Anaconda 설치
+=>path 환경변수: 디렉토리를 등록해서 디렉토리에 있는 명령어들을 아무곳에서나 사용할 수 있도록 해주는 환경변수
+=>설치 할 때 체크하지 않았다면 설치 한 후 python 명령어 디렉토리를 추가해주면 됩니다. 
+
+**Python IDE
+
+1.Console: python 만 설치하면 제공 - 콘솔에 python이라고 명령어를 입력하고 사용
+=>명령어 입력 모드가 불편해서 python 라이브러리 설치하는 경우 주로 사용
+
+2.Python IDLE: python 만 설치하면 제공 - 파일에 작성해서 한 번에 실행이 가능
+=>editor 기능만 제공되기 때문에 잘 사용하지 않음
+
+3.Jupyter Notebook: 별도로 설치가 가능하고 Anaconda를 설치하면 자동으로 설치
+=>웹 브라우저에서 실행이 가능
+=>셀 단위 작성이 가능하고 텍스트와 이미지를 하나의 화면에 출력 가능
+=>작성한 후 보고서 만들기가 편리
+=>코드 센스가 동작하지 않음
+
+4.기타(Spyder, Pycharm, VSCode 등등)
+=>Spyder의 경우는 Anacoda를 설치하면 자동 설치가 됩니다.
+=>코드 센스가 동작하고 디버깅이 편리
+=>이미지가 별도로 출력되고 보고서 만들기가 불편
+
+**웹에서 데이터 가져오기
+1.기본 패키지 이용
+=>urllib 와 urllib2 패키지를 이용해서 가져올 수 있음
+1)request 모듈
+=>urlopen 이라는 메소드에 url을 문자열로 대입하면 response 타입의 객체가 리턴
+=>response의 getheaders()를 호출하면 서버의 정보를 읽을 수 있고 status 속성을 이용하면 서버의 상태 정보를 읽을 수 있음
+read()를 호출해서 내용을 읽을 수 있음
+=>읽어온 텍스트가 깨지는 경우에는 response객체.info().get_content_charset()을 이용해서 인코딩 정보를 리턴받고 read().decode(인코딩 정보)를 호출하면 원본 텍스트를 읽을 수 있습니다.
+
+실습: http://www.daum.net 의 html을 전부 가져오기
+
+#패키지 사용
+import urllib.request
+
+#데이터 요청
+response = urllib.request.urlopen('http://www.daum.net')
+#데이터 출력
+data = response.read()
+print(data)
+
+#한글이 깨지는 경우
+encoding = response.info().get_content_charset()
+html = data.decode(encoding)
+print(html)
+
+=>주피터 노트북에서는 마지막에 데이터이름만 사용하면 자동으로 출력
+
+2)URL에 한글이나 특수문자가 있는 경우
+=>요청 URL에 한글이나 특수문자가 있으면 URL도 인코딩을 해주어야 합니다.
+URL에 한글이나 특수문자가 있다고 해서 전부 인코딩하는 것이 아니고 파라미터 부분만 인코딩하면 됩니다. 
+=>URL을 확인할 때 ? 다음 부분에 한글이 있는지 확인하면 됩니다.
+=>파라미터 부분을 인코딩 하고자 할 때는 urllib.parse 모듈의 quote_plus 함수나 quote 함수를 이용
+
+#필요한 모듈 import - 모듈을 가져오는 것입니다.
+import urllib.request
+#urllib.parse에서 quote 만 가져오고 앞의 모듈이름은 제거
+from urllib.parse import quote
+
+addr = 'https://search.naver.com/search.naver?sm=top_hty&fbm=1&ie=utf8&query=' 
+    + quote('코로나')
+#데이터 요청
+response = urllib.request.urlopen(addr)
+#데이터 출력
+data = response.read()
+#print(data)
+
+#한글이 깨지는 경우
+#웹에서 받아온 데이터가 깨지면 인코딩을 찾아서 디코딩을 해 주어야 함
+encoding = response.info().get_content_charset()
+html = data.decode(encoding)
+print(html)
+
+
+
